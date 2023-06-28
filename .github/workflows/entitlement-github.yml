@@ -61,7 +61,17 @@ jobs:
         AZURE_ROLE_NAME: ${{ needs.parse-issue.outputs.roleName }}
 
     - name: Close issue
-      uses: peter-evans/close-issue@v1
+      uses: actions/github-script@v4
       with:
-        issue-number: ${{ github.event.issue.number }}
-        comment: 'Request has been processed.'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.issues.comment({
+            issue_number: context.issue.number,
+            body: 'Azure resource assigned to app'
+          });
+
+          github.issues.update({
+            issue_number: context.issue.number,
+            state: 'closed'
+          })
+          
