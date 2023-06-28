@@ -65,13 +65,10 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          github.issues.comment({
-            issue_number: context.issue.number,
-            body: 'Azure resource assigned to app'
-          });
-
-          github.issues.update({
+          github.rest.issues.update({
+            repo: context.repo.repo,
+            owner: context.repo.owner,
             issue_number: context.issue.number,
             state: 'closed'
-          })
-          
+            state_reason: 'Azure resource assigned to app'
+          });
