@@ -1,7 +1,6 @@
-name: Access request to GitHub EMU
-description: Assign an Azure AD user or group to GitHub
+name: "Access request to GitHub EMU"
+description: "Assign an Azure AD user or group to GitHub"
 title: "Access request to GitHub EMU"
-labels: "github-emu"
 body:
   - type: markdown
     attributes:
