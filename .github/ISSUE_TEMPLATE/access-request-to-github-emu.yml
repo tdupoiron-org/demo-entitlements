@@ -10,8 +10,8 @@ body:
   - type: dropdown
     id: type
     attributes:
-      label: Object type
-      description: Would you like to grant a specific Azure Directory user or a group?
+      label: Resource type
+      description: What kind of Azure AD resource type would you like to grant access?
       options:
         - User
         - Group
@@ -29,7 +29,7 @@ body:
     id: role
     attributes:
       label: Role
-      description: What version of our software are you running?
+      description: Which GitHub role will be assigned to the resource?
       options:
         - Enterprise Owner
         - Billing Manager
