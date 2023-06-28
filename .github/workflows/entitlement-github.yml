@@ -10,7 +10,7 @@ env:
 jobs:
 
   parse-issue:
-    if: contains(github.event.labels.*.name, 'github-emu')
+    if: contains(github.event.issue.labels.*.name, 'github-emu')
   
     runs-on: ubuntu-latest
 
