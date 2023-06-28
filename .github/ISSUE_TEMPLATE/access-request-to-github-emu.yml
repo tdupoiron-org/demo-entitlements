@@ -1,6 +1,6 @@
-name: Access request to GitHub EM
-description: Access request to GitHub EM
-title: "Access request to GitHub EM"
+name: Access request to GitHub EMU
+description: Access request to GitHub EMU
+title: "Access request to GitHub EMU"
 labels: ["github-emu","entitlement"]
 body:
   - type: markdown
