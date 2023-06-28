@@ -59,3 +59,9 @@ jobs:
         AZURE_RESOURCE_TYPE: ${{ needs.parse-issue.outputs.resourceType }}
         AZURE_RESOURCE_NAME: ${{ needs.parse-issue.outputs.resourceName }}
         AZURE_ROLE_NAME: ${{ needs.parse-issue.outputs.roleName }}
+
+    - name: Close issue
+      uses: peter-evans/close-issue@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        comment: 'Entitlement has been assigned.'
