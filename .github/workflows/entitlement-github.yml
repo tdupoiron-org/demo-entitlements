@@ -64,4 +64,4 @@ jobs:
       uses: peter-evans/close-issue@v1
       with:
         issue-number: ${{ github.event.issue.number }}
-        comment: 'Entitlement has been assigned.'
+        comment: 'Request has been processed.'
