@@ -1,62 +1,39 @@
-name: Bug Report
-description: File a bug report
-title: "[Bug]: "
-labels: ["bug", "triage"]
-assignees:
-  - octocat
+name: Access request to GitHub EM
+description: Access request to GitHub EM
+title: "Access request to GitHub EM"
+labels: ["github-emu","entitlement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
-  - type: input
-    id: contact
+        Fill the form to request a new access to this Enterprise Account. The user or group will be assigned to GitHub Enterprise application in Azure Active Directory
+  - type: dropdown
+    id: type
     attributes:
-      label: Contact Details
-      description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
+      label: Object type
+      description: Would you like to grant a specific Azure Directory user or a group?
+      options:
+        - User
+        - Group
     validations:
-      required: false
-  - type: textarea
-    id: what-happened
+      required: true
+  - type: input
+    id: user_or_group
     attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-      value: "A bug happened!"
+      label: User or group name
+      description: Indicate the user principal or the group name
+      placeholder: ex. Developers
     validations:
       required: true
   - type: dropdown
-    id: version
+    id: role
     attributes:
-      label: Version
+      label: Role
       description: What version of our software are you running?
       options:
-        - 1.0.2 (Default)
-        - 1.0.3 (Edge)
+        - Enterprise Owner
+        - Billing Manager
+        - User
+        - Restricted User
     validations:
       required: true
-  - type: dropdown
-    id: browsers
-    attributes:
-      label: What browsers are you seeing the problem on?
-      multiple: true
-      options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
-  - type: textarea
-    id: logs
-    attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
-      render: shell
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
-      options:
-        - label: I agree to follow this project's Code of Conduct
-          required: true
