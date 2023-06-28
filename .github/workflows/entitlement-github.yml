@@ -60,15 +60,15 @@ jobs:
         AZURE_RESOURCE_NAME: ${{ needs.parse-issue.outputs.resourceName }}
         AZURE_ROLE_NAME: ${{ needs.parse-issue.outputs.roleName }}
 
-    - name: Close issue
-      uses: actions/github-script@v4
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          github.rest.issues.update({
-            repo: context.repo.repo,
-            owner: context.repo.owner,
-            issue_number: context.issue.number,
-            state: 'closed'
-            state_reason: 'Azure resource assigned to app'
-          });
+    #- name: Close issue
+    #  uses: actions/github-script@v4
+    #  with:
+    #    github-token: ${{ secrets.GITHUB_TOKEN }}
+    #    script: |
+    #      github.rest.issues.update({
+    #        repo: context.repo.repo,
+    #        owner: context.repo.owner,
+    #        issue_number: context.issue.number,
+    #        state: 'closed'
+    #        state_reason: 'Azure resource assigned to app'
+    #      });
