@@ -4,6 +4,9 @@ on:
   issues:
     types: [opened, edited, reopened]
 
+env:
+  AZURE_APP_NAME: GitHub Enterprise Managed User
+
 jobs:
 
   parse-issue:
@@ -16,6 +19,8 @@ jobs:
       resourceName: ${{ steps.parse.outputs.resourceName }}
       roleName: ${{ steps.parse.outputs.roleName }}
 
+    steps:
+    
     - name: Parse issue
       id: parse
       run: |
@@ -27,7 +32,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    needs: [build]
+    needs: parse-issue
 
     steps:
     - uses: actions/checkout@v3
@@ -48,7 +53,8 @@ jobs:
         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        AZURE_APP_NAME: ${{ secrets.AZURE_APP_NAME }}
-        AZURE_RESOURCE_TYPE: ${{ secrets.AZURE_RESOURCE_TYPE }}
-        AZURE_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
-        AZURE_ROLE_NAME: ${{ secrets.AZURE_ROLE_NAME }}
+
+        AZURE_APP_NAME: ${{ env.AZURE_APP_NAME }}
+        AZURE_RESOURCE_TYPE: ${{ needs.parse-issue.outputs.resourceType }}
+        AZURE_RESOURCE_NAME: ${{ needs.parse-issue.outputs.resourceName }}
+        AZURE_ROLE_NAME: ${{ needs.parse-issue.outputs.roleName }}
