@@ -31,4 +31,6 @@ inputs:
     description: 'The name of the application role to assign to the resource'
     required: true
 
-  
+runs:
+  using: 'node16'
+  main: 'dist/action.js'
