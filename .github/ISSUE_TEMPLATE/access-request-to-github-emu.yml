@@ -20,7 +20,7 @@ body:
   - type: input
     id: user_or_group
     attributes:
-      label: User or group name
+      label: User or Group
       description: Indicate the user principal or the group name
       placeholder: ex. Developers
     validations:
