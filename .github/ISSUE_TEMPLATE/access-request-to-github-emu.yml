@@ -10,17 +10,17 @@ body:
   - type: dropdown
     id: type
     attributes:
-      label: Resource type
+      label: Resource Type
       description: What kind of Azure AD resource type would you like to grant access?
       options:
-        - User (Default)
+        - User
         - Group
     validations:
       required: true
   - type: input
     id: user_or_group
     attributes:
-      label: User or Group
+      label: Resource Name
       description: Indicate the user principal or the group name
       placeholder: ex. Developers
     validations:
@@ -33,7 +33,7 @@ body:
       options:
         - Enterprise Owner
         - Billing Manager
-        - User (Default)
+        - User
         - Restricted User
     validations:
       required: true

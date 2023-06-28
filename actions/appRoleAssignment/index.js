@@ -13,7 +13,7 @@ const AZURE_TENANT_ID = core.getInput('AZURE_TENANT_ID');
 const AZURE_APP_NAME = core.getInput('AZURE_APP_NAME');
 const AZURE_RESOURCE_TYPE = core.getInput('AZURE_RESOURCE_TYPE');
 const AZURE_RESOURCE_NAME = core.getInput('AZURE_RESOURCE_NAME');
-const AZURE_ROLE_NAME = core.getInput('AZURE_ROLE_NAME');
+var AZURE_ROLE_NAME = core.getInput('AZURE_ROLE_NAME');
 
 // Function to get access token
 async function getAccessToken() {
@@ -99,15 +99,19 @@ async function main() {
 
     var app = await getApplicationFromName(token, AZURE_APP_NAME);
     
-    if (AZURE_RESOURCE_TYPE == 'group') {
+    if (AZURE_RESOURCE_TYPE == 'Group') {
         var group = await getGroupFromName(token, AZURE_RESOURCE_NAME);
     } else {
         var user = await getUserFromName(token, AZURE_RESOURCE_NAME);
     }
 
+    if (AZURE_ROLE_NAME == null) {
+        AZURE_ROLE_NAME = 'User';
+    }
+
     var appId = app.value[0].id;
     var roleId = app.value[0].appRoles.filter(role => role.displayName == AZURE_ROLE_NAME)[0].id;
-    var principalId = AZURE_RESOURCE_TYPE == 'group' ? group.value[0].id : user.value[0].id;
+    var principalId = AZURE_RESOURCE_TYPE == 'Group' ? group.value[0].id : user.value[0].id;
 
     if (appId == null || roleId == null || principalId == null) {
         core.setFailed('Could not find app, role or principal');

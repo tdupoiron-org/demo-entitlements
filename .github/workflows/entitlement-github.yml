@@ -2,24 +2,53 @@ name: Entitlement for GitHub
 
 on:
   issues:
+    types: [opened, edited, reopened]
 
 jobs:
+
+  parse-issue:
+    if: contains(github.event.labels.*.name, 'github-emu')
+  
+    runs-on: ubuntu-latest
+
+    outputs:
+      resourceType: ${{ steps.parse.outputs.resourceType }}
+      resourceName: ${{ steps.parse.outputs.resourceName }}
+      roleName: ${{ steps.parse.outputs.roleName }}
+
+    - name: Parse issue
+      id: parse
+      run: |
+          echo "${{ github.event.issue.body }}" >> body.txt
+          echo "::set-output name=resourceType::$(awk '/### Resource Type/{getline; getline; print}' body.txt)"
+          echo "::set-output name=resourceName::$(awk '/### Resource Name/{getline; getline; print}' body.txt)"
+          echo "::set-output name=roleName::$(awk '/### Role/{getline; getline; print}' body.txt)"
+
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
+    needs: [build]
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 16.x
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '16.x'
 
     - name: Build
       run: |
         npm install
         npx webpack
+
+    - name: Assign Azure resource to app
+      uses: ./actions/appRoleAssignment
+      with:
+        AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        AZURE_APP_NAME: ${{ secrets.AZURE_APP_NAME }}
+        AZURE_RESOURCE_TYPE: ${{ secrets.AZURE_RESOURCE_TYPE }}
+        AZURE_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
+        AZURE_ROLE_NAME: ${{ secrets.AZURE_ROLE_NAME }}
