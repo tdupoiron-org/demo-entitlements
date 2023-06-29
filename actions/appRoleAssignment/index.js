@@ -48,7 +48,6 @@ async function invokeGraphGet(token, url) {
         return response.data;
     }).catch((error) => {
         core.setFailed(error);
-        throw error.response.data.error;
     });
 
 }
@@ -68,6 +67,11 @@ async function getGroupFromName(token, groupName) {
     return group;
 }
 
+async function getAppProvisioningJob(token, appId) {
+    var appProvisioningJob = await invokeGraphGet(token, `${GRAPH_ENDPOINT}/servicePrincipals/${appId}/synchronization/jobs`)
+    return appProvisioningJob;
+}
+
 async function assignRole(token, appId, roleId, principalId) {
 
     const data = `{"principalId": "${principalId}","resourceId": "${appId}","appRoleId": "${roleId}"}`;
@@ -84,11 +88,9 @@ async function assignRole(token, appId, roleId, principalId) {
         return response.data;
     }).catch((error) => {
         core.setFailed(error);
-        throw error.response.data.error;
     });
 
 }
-
 
 async function main() {
 
@@ -121,9 +123,9 @@ async function main() {
         return;
     }
     var result = await assignRole(token, appId, roleId, principalId);
+    core.debug("result: " + JSON.stringify(result));
 
     core.info(`Role assigned successfully`)
-    core.debug("result: " + JSON.stringify(result));
 
 }
 
