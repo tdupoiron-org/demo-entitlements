@@ -29,7 +29,7 @@ jobs:
           echo "::set-output name=resourceName::$(awk '/### Resource Name/{getline; getline; print}' body.txt)"
           echo "::set-output name=roleName::$(awk '/### Role/{getline; getline; print}' body.txt)"
 
-  build:
+  assign-resource:
     runs-on: ubuntu-latest
 
     needs: parse-issue
@@ -59,8 +59,6 @@ jobs:
         AZURE_RESOURCE_TYPE: ${{ needs.parse-issue.outputs.resourceType }}
         AZURE_RESOURCE_NAME: ${{ needs.parse-issue.outputs.resourceName }}
         AZURE_ROLE_NAME: ${{ needs.parse-issue.outputs.roleName }}
-
-      continue-on-error: true
 
     - name: Comment on failure
       if: failure()
