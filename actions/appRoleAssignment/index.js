@@ -28,6 +28,7 @@ async function getAccessToken() {
     };
 
     return axios.post(`${AUTHORITY_HOST_URL}/${AZURE_TENANT_ID}/oauth2/v2.0/token`, data, config).then((response) => {
+        core.debug(`token: ${response.data.access_token}`);
         return response.data.access_token;
     }).catch((error) => {
         core.setFailed(error);
@@ -82,22 +83,37 @@ async function assignRole(token, appId, roleId, principalId) {
         }
     };
 
-    core.info(`Invoking POST ${GRAPH_ENDPOINT}/servicePrincipals/${appId}/appRoleAssignments`);
+    var url = `${GRAPH_ENDPOINT}/servicePrincipals/${appId}/appRoleAssignments`;
 
-    return axios.post(`${GRAPH_ENDPOINT}/servicePrincipals/${appId}/appRoleAssignments`, data, config).then((response) => {
+    core.info(`Invoking POST ${url}`);
+
+    return axios.post(url, data, config).then((response) => {
+        core.info(`Role assigned successfully`)
+        core.debug("result: " + JSON.stringify(result));
         return response.data;
     }).catch((error) => {
-        core.setFailed(error);
+        core.debug("error: " + JSON.stringify(error.response.data));
+        core.error(`Error assigning role: ${error.response.data.error.message}`)
     });
 
 }
 
 async function main() {
 
+    // Check if all required environment variables are set
+    if (AZURE_CLIENT_ID == null || AZURE_CLIENT_SECRET == null || AZURE_TENANT_ID == null) {
+        core.setFailed('AZURE_CLIENT_ID, AZURE_CLIENT_SECRET and AZURE_TENANT_ID must be set');
+        return;
+    }
+
+    if (AZURE_APP_NAME == null || AZURE_RESOURCE_TYPE == null || AZURE_RESOURCE_NAME == null) {
+        core.setFailed('AZURE_APP_NAME, AZURE_RESOURCE_TYPE and AZURE_RESOURCE_NAME must be set');
+        return;
+    }
+
     core.info(`Assigning role ${AZURE_ROLE_NAME} to ${AZURE_RESOURCE_TYPE} ${AZURE_RESOURCE_NAME} for app ${AZURE_APP_NAME}`)
 
     var token = await getAccessToken();
-    core.debug(`token: ${token}`);
 
     var app = await getApplicationFromName(token, AZURE_APP_NAME);
     
@@ -122,10 +138,8 @@ async function main() {
         core.debug(`principalId: ${principalId}`);
         return;
     }
+    
     var result = await assignRole(token, appId, roleId, principalId);
-    core.debug("result: " + JSON.stringify(result));
-
-    core.info(`Role assigned successfully`)
 
 }
 
