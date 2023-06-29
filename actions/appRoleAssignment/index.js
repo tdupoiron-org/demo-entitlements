@@ -103,7 +103,7 @@ async function assignRole(token, appId, roleId, principalId) {
     return axios.post(url, data, config).then((response) => {
         core.info(`Role assigned successfully`)
         core.setOutput("message", `Role assigned successfully`)
-        core.debug("result: " + JSON.stringify(result));
+        core.debug("result: " + JSON.stringify(response.data));
         return response.data;
     }).catch((error) => {
         core.debug("error: " + JSON.stringify(error.response.data));
