@@ -31,7 +31,9 @@ async function getAccessToken() {
         core.debug(`token: ${response.data.access_token}`);
         return response.data.access_token;
     }).catch((error) => {
-        core.setFailed(error.response.data.error.message);
+        var errorMessage = error.response.data.error.message;
+        core.setOutput("message", errorMessage)
+        core.setFailed(errorMessage);
     });
 };
 
@@ -48,7 +50,9 @@ async function invokeGraphGet(token, url) {
     return axios.get(url, config).then((response) => {
         return response.data;
     }).catch((error) => {
-        core.setFailed(error.response.data.error.message);
+        var errorMessage = error.response.data.error.message;
+        core.setOutput("message", errorMessage)
+        core.setFailed(errorMessage);
     });
 
 }
@@ -57,7 +61,9 @@ async function getApplicationFromName(token, appName) {
     var application = await invokeGraphGet(token, `${GRAPH_ENDPOINT}/servicePrincipals?$filter=displayName eq '${appName}'`)
 
     if (application.value.length == 0) {
-        core.setFailed(`Could not find app with name ${appName}`);
+        var errorMessage = `Could not find app with name ${appName}`;
+        core.setOutput("message", errorMessage)
+        core.setFailed(errorMessage);
         return;
     }
 
@@ -68,7 +74,9 @@ async function getUserFromName(token, userName) {
     var user = await invokeGraphGet(token, `${GRAPH_ENDPOINT}/users?$filter=userPrincipalName eq '${userName}'`)
 
     if (user.value.length == 0) {
-        core.setFailed(`Could not find user with name ${userName}`);
+        var errorMessage = `Could not find user with name ${userName}`;
+        core.setOutput("message", errorMessage)
+        core.setFailed(errorMessage);
         return;
     }
 
@@ -79,7 +87,9 @@ async function getGroupFromName(token, groupName) {
     var group = await invokeGraphGet(token, `${GRAPH_ENDPOINT}/groups?$filter=displayName eq '${groupName}'`)
 
     if (group.value.length == 0) {
-        core.setFailed(`Could not find group with name ${groupName}`);  
+        var errorMessage = `Could not find group with name ${groupName}`;
+        core.setOutput("message", errorMessage)
+        core.setFailed(errorMessage);
         return;
     }
 
@@ -106,9 +116,9 @@ async function assignRole(token, appId, roleId, principalId) {
         core.debug("result: " + JSON.stringify(response.data));
         return response.data;
     }).catch((error) => {
-        core.debug("error: " + JSON.stringify(error.response.data));
-        core.setOutput("message", error.response.data.error.message)
-        core.setFailed(error.response.data.error.message);
+        var errorMessage = error.response.data.error.message;
+        core.setOutput("message", errorMessage)
+        core.setFailed(errorMessage);
     });
 
 }
@@ -117,12 +127,16 @@ async function main() {
 
     // Check if all required environment variables are set
     if (AZURE_CLIENT_ID == null || AZURE_CLIENT_SECRET == null || AZURE_TENANT_ID == null) {
-        core.setFailed('AZURE_CLIENT_ID, AZURE_CLIENT_SECRET and AZURE_TENANT_ID must be set');
+        var errorMessage = 'AZURE_CLIENT_ID, AZURE_CLIENT_SECRET and AZURE_TENANT_ID must be set';
+        core.setOutput("message", errorMessage)
+        core.setFailed(errorMessage);
         return;
     }
 
     if (AZURE_APP_NAME == null || AZURE_RESOURCE_TYPE == null || AZURE_RESOURCE_NAME == null) {
-        core.setFailed('AZURE_APP_NAME, AZURE_RESOURCE_TYPE and AZURE_RESOURCE_NAME must be set');
+        var errorMessage = 'AZURE_APP_NAME, AZURE_RESOURCE_TYPE and AZURE_RESOURCE_NAME must be set';
+        core.setOutput("message", errorMessage)
+        core.setFailed(errorMessage);
         return;
     }
 
@@ -149,10 +163,9 @@ async function main() {
     var principalId = AZURE_RESOURCE_TYPE == 'Group' ? group.value[0].id : user.value[0].id;
 
     if (appId == null || roleId == null || principalId == null) {
-        core.setFailed('Could not find app, role or principal');
-        core.debug(`appId: ${appId}`);
-        core.debug(`roleId: ${roleId}`);
-        core.debug(`principalId: ${principalId}`);
+        var errorMessage = 'Could not find app, role or principal';
+        core.setOutput("message", errorMessage)
+        core.setFailed(errorMessage);
         return;
     }
     
