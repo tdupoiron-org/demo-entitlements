@@ -107,6 +107,7 @@ async function assignRole(token, appId, roleId, principalId) {
         return response.data;
     }).catch((error) => {
         core.debug("error: " + JSON.stringify(error.response.data));
+        core.setOutput("message", error.response.data.error.message)
         core.setFailed(error.response.data.error.message);
     });
 
