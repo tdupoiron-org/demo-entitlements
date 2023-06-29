@@ -79,7 +79,7 @@ async function getGroupFromName(token, groupName) {
     var group = await invokeGraphGet(token, `${GRAPH_ENDPOINT}/groups?$filter=displayName eq '${groupName}'`)
 
     if (group.value.length == 0) {
-        core.setFailed(`Could not find group with name ${groupName}`);
+        core.setFailed(`Could not find group with name ${groupName}`);  
         return;
     }
 
@@ -130,12 +130,14 @@ async function main() {
 
     var app = await getApplicationFromName(token, AZURE_APP_NAME);
     
+    // If no resource type is specified, use the type "User"
     if (AZURE_RESOURCE_TYPE == 'Group') {
         var group = await getGroupFromName(token, AZURE_RESOURCE_NAME);
     } else {
         var user = await getUserFromName(token, AZURE_RESOURCE_NAME);
     }
 
+    // If no role name is specified, use the role with the name "User"
     if (AZURE_ROLE_NAME == null) {
         AZURE_ROLE_NAME = 'User';
     }
