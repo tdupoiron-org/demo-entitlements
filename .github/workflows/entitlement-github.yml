@@ -34,6 +34,9 @@ jobs:
 
     needs: parse-issue
 
+    permissions:
+      issues: write
+
     steps:
     - uses: actions/checkout@v3
 
