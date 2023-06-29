@@ -31,7 +31,7 @@ async function getAccessToken() {
         core.debug(`token: ${response.data.access_token}`);
         return response.data.access_token;
     }).catch((error) => {
-        core.setFailed(error);
+        core.setFailed(error.response.data.error.message);
     });
 };
 
@@ -48,7 +48,7 @@ async function invokeGraphGet(token, url) {
     return axios.get(url, config).then((response) => {
         return response.data;
     }).catch((error) => {
-        core.setFailed(error);
+        core.setFailed(error.response.data.error.message);
     });
 
 }
@@ -108,6 +108,7 @@ async function assignRole(token, appId, roleId, principalId) {
     }).catch((error) => {
         core.debug("error: " + JSON.stringify(error.response.data));
         core.error(`Error assigning role: ${error.response.data.error.message}`)
+        core.setFailed(error.response.data.error.message);
     });
 
 }

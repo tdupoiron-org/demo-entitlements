@@ -90,3 +90,17 @@ jobs:
             repo: context.repo.repo,
             body: '${{ steps.assign-resource.outputs.message }}'
           })
+
+          github.rest.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ['done']
+          })
+
+          github.rest.issues.update({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'closed'
+          })
