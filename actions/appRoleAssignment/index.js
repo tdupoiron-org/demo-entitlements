@@ -55,22 +55,35 @@ async function invokeGraphGet(token, url) {
 
 async function getApplicationFromName(token, appName) {
     var application = await invokeGraphGet(token, `${GRAPH_ENDPOINT}/servicePrincipals?$filter=displayName eq '${appName}'`)
+
+    if (application.value.length == 0) {
+        core.setFailed(`Could not find app with name ${appName}`);
+        return;
+    }
+
     return application;
 }
 
 async function getUserFromName(token, userName) {
     var user = await invokeGraphGet(token, `${GRAPH_ENDPOINT}/users?$filter=userPrincipalName eq '${userName}'`)
+
+    if (user.value.length == 0) {
+        core.setFailed(`Could not find user with name ${userName}`);
+        return;
+    }
+
     return user;
 }
 
 async function getGroupFromName(token, groupName) {
     var group = await invokeGraphGet(token, `${GRAPH_ENDPOINT}/groups?$filter=displayName eq '${groupName}'`)
-    return group;
-}
 
-async function getAppProvisioningJob(token, appId) {
-    var appProvisioningJob = await invokeGraphGet(token, `${GRAPH_ENDPOINT}/servicePrincipals/${appId}/synchronization/jobs`)
-    return appProvisioningJob;
+    if (group.value.length == 0) {
+        core.setFailed(`Could not find group with name ${groupName}`);
+        return;
+    }
+
+    return group;
 }
 
 async function assignRole(token, appId, roleId, principalId) {
@@ -111,7 +124,7 @@ async function main() {
         return;
     }
 
-    core.info(`Assigning role ${AZURE_ROLE_NAME} to ${AZURE_RESOURCE_TYPE} ${AZURE_RESOURCE_NAME} for app ${AZURE_APP_NAME}`)
+    core.info(`Assigning role "${AZURE_ROLE_NAME}" to "${AZURE_RESOURCE_TYPE} ${AZURE_RESOURCE_NAME}" for app "${AZURE_APP_NAME}"`)
 
     var token = await getAccessToken();
 
