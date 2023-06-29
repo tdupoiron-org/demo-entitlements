@@ -86,7 +86,9 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          console.log(JSON.stringify(${{ steps.assign-resource.outputs.message }}))
+          console.log( ${{ steps.assign-resource.conclusion }} )
+          console.log( ${{ steps.assign-resource.outputs.message }} )
+          console.log( ${{ steps.assign-resource.outcome }} )
 
 
     - name: Comment on issue
