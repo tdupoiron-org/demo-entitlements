@@ -82,7 +82,7 @@ jobs:
       if: failure()
       run: |
         echo "Failed to assign resource to app"
-        echo "${{ steps }}"
+        echo "${{ steps }} | jq -r ."
 
     - name: Comment on issue
       if: success()
