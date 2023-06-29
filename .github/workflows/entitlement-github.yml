@@ -71,12 +71,13 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '${{ steps.assign-resource.outputs.error }}'
-          })
+          console.log(JSON.stringify(steps, null, 2))
+      #     github.rest.issues.createComment({
+      #       issue_number: context.issue.number,
+      #       owner: context.repo.owner,
+      #       repo: context.repo.repo,
+      #       body: '${{ steps.assign-resource.outputs.error }}'
+      #     })
 
     - name: Comment on issue
       if: success()
