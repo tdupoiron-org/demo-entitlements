@@ -78,11 +78,16 @@ jobs:
     #   #       repo: context.repo.repo,
     #   #       body: '${{ steps }}'
     #   #     })
+
+    # Write step object in console
     - name: Comment on failure
       if: failure()
-      run: |
-        echo "Failed to assign resource to app"
-        echo "${{ steps }} | jq -r ."
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          console.log(JSON.stringify(${{ steps }}))
+
 
     - name: Comment on issue
       if: success()
