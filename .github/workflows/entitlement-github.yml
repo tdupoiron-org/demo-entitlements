@@ -65,19 +65,24 @@ jobs:
         AZURE_RESOURCE_NAME: ${{ needs.parse-issue.outputs.resourceName }}
         AZURE_ROLE_NAME: ${{ needs.parse-issue.outputs.roleName }}
 
+    # - name: Comment on failure
+    #   if: failure()
+    #   uses: actions/github-script@v5
+    #   with:
+    #     github-token: ${{ secrets.GITHUB_TOKEN }}
+    #     script: |
+    #       console.log(JSON.stringify(${{ steps }}))
+    #   #     github.rest.issues.createComment({
+    #   #       issue_number: context.issue.number,
+    #   #       owner: context.repo.owner,
+    #   #       repo: context.repo.repo,
+    #   #       body: '${{ steps }}'
+    #   #     })
     - name: Comment on failure
       if: failure()
-      uses: actions/github-script@v5
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          console.log(JSON.stringify(steps, null, 2))
-      #     github.rest.issues.createComment({
-      #       issue_number: context.issue.number,
-      #       owner: context.repo.owner,
-      #       repo: context.repo.repo,
-      #       body: '${{ steps.assign-resource.outputs.error }}'
-      #     })
+      run: |
+        echo "Failed to assign resource to app"
+        echo "${{ steps }}"
 
     - name: Comment on issue
       if: success()
