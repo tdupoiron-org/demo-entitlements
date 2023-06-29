@@ -75,7 +75,7 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '${{ toJSON(steps.assign-resource) }}'
+            body: '${{ steps.assign-resource.outputs.error }}'
           })
 
     - name: Comment on issue
@@ -88,5 +88,5 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '${{ toJSON(steps.assign-resource) }}'
+            body: '${{ steps.assign-resource.outputs.message }}'
           })
